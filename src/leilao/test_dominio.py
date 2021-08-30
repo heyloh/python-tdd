@@ -72,11 +72,7 @@ class TestLeilao(TestCase):
 
     def test_should_not_allow_propose_bid_if_last_user_is_the_same(self) -> None:
         generic_user = Usuario('Generic User 1')
-        try:
+
+        with self.assertRaises(ValueError):
             bids = [Lance(generic_user, 150.55), Lance(generic_user, 200.46)]
             self.simulate_auction_scenery(bids=bids)
-            self.fail(msg="Did not raise an error.")
-        except ValueError:
-            quantidade_recebida_de_lances = len(self.leilao.lances)
-            quantidade_esperada_de_lances = 1
-            self.assertEqual(quantidade_esperada_de_lances, quantidade_recebida_de_lances)
