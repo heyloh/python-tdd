@@ -1,6 +1,3 @@
-import sys
-
-
 class User:
 
     def __init__(self, name, wallet=500.0):
@@ -37,21 +34,33 @@ class Auction:
     def __init__(self, description):
         self.description = description
         self.__bids = []
-        self.highest_bid = sys.float_info.min
-        self.lowest_bid = sys.float_info.max
+        self.highest_bid = 0.0
+        self.lowest_bid = 0.0
 
     def propose(self, bid: Bid):
-        if not self.__bids or self.__bids[-1].user.name != bid.user.name and bid.value > self.__bids[
-            -1].value:
-            if bid.value > self.highest_bid:
-                self.highest_bid = bid.value
-
-            if bid.value < self.lowest_bid:
-                self.lowest_bid = bid.value
-
-            self.__bids.append(bid)
-        else:
+        if self._is_bid_invalid(bid):
             raise ValueError("An error occurred on bid propose.")
+
+        if not self._has_bids():
+            self.lowest_bid = bid.value
+
+        self.highest_bid = bid.value
+        self.__bids.append(bid)
+
+    def _has_bids(self):
+        return self.__bids
+
+    def _is_bid_invalid(self, bid):
+        return self.__bids and (
+                self._is_the_same_user(bid)
+                or self._is_bid_lower(bid)
+        )
+
+    def _is_the_same_user(self, bid):
+        return self.__bids[-1].user.name == bid.user.name
+
+    def _is_bid_lower(self, bid):
+        return bid.value <= self.__bids[-1].value
 
     @property
     def bids(self):
