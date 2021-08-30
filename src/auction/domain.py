@@ -3,12 +3,26 @@ import sys
 
 class User:
 
-    def __init__(self, name):
+    def __init__(self, name, wallet=500.0):
         self.__name = name
+        self.__wallet = wallet
 
     @property
     def name(self):
         return self.__name
+
+    @property
+    def wallet(self):
+        return self.__wallet
+
+    def propose_bid(self, auction, value):
+        if value > self.__wallet:
+            raise ValueError(f'User tried to propose R${value} having only R${self.__wallet}.')
+
+        bid = Bid(self, value)
+        auction.propose(bid)
+
+        self.__wallet -= value
 
 
 class Bid:
@@ -28,7 +42,7 @@ class Auction:
 
     def propose(self, bid: Bid):
         if not self.__bids or self.__bids[-1].user.name != bid.user.name and bid.value > self.__bids[
-                -1].value:
+            -1].value:
             if bid.value > self.highest_bid:
                 self.highest_bid = bid.value
 
