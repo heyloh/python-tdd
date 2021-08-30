@@ -12,8 +12,11 @@ class User:
     def wallet(self):
         return self.__wallet
 
+    def _is_over_limit(self, value):
+        return value > self.__wallet
+
     def propose_bid(self, auction, value):
-        if value > self.__wallet:
+        if self._is_over_limit(value):
             raise ValueError(f'User tried to propose R${value} having only R${self.__wallet}.')
 
         bid = Bid(self, value)
