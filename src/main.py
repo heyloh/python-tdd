@@ -1,20 +1,17 @@
-from leilao.dominio import Usuario, Lance, Leilao, Avaliador
+from auction import *
 
-loh = Usuario('Loh')
-tauri = Usuario('Tauri')
+loh = User('Loh')
+tauri = User('Tauri')
 
-lance_da_tauri = Lance(tauri, 100.0)
-lance_da_loh = Lance(loh, 150.0)
+tauri_bid = Bid(tauri, 100.0)
+loh_bid = Bid(loh, 150.0)
 
-leilao = Leilao('Celular')
+auction = Auction('Arranhador')
 
-leilao.lances.append(lance_da_loh)
-leilao.lances.append(lance_da_tauri)
+auction.propose(tauri_bid)
+auction.propose(loh_bid)
 
-for lance in leilao.lances:
-    print(f'O usuario {lance.usuario.nome} deu um lance de R${lance.valor}.')
+for bid in auction.bids:
+    print(f'The user {bid.user.name} had propose a bid of R${bid.value}.')
 
-avaliador = Avaliador()
-avaliador.avalia(leilao)
-
-print(f'O menor lance foi de R${avaliador.menor_lance:.2f} e o maior lance foi de R${avaliador.maior_lance:.2f}')
+print(f'The lowest bid was R${auction.lowest_bid:.2f} and the highest bid was R${auction.highest_bid:.2f}')
